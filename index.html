@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Website chúc mừng ngày Phụ nữ Việt Nam 20/10">
+  <title>Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10</title>
+
+  <!-- Google Fonts: Phông chữ hiển thị sang trọng, lãng mạn & thư pháp viết tay -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600;1,700&display=swap"
+    rel="stylesheet">
+
+  <!-- File CSS nền tảng của dự án -->
+  <link rel="stylesheet" href="assets/main.css">
+  <!-- CSS Màn hình Lịch Fantasy 20/10 & Tranh ghép Puzzle -->
+  <link rel="stylesheet" href="assets/calendar.css">
+  <!-- CSS Giao diện Thiệp Thư 20/10 Giai Đoạn Cuối -->
+  <link rel="stylesheet" href="assets/letter.css">
+</head>
+
+<body>
+  <!-- =================================================================
+       KHUNG GIAO DIỆN NỀN TẢNG (5 LỚP XẾP CHỒNG THEO KỊCH BẢN TRẢI NGHIỆM)
+       ================================================================= -->
+
+  <!-- Lớp 1: Nền vũ trụ - Canvas sao, sao băng và thiên hà ở TASK 03 -->
+  <div id="universe-layer" class="app-layer layer-universe" aria-hidden="true">
+    <canvas id="universe-canvas" class="universe-canvas" aria-hidden="true"></canvas>
+  </div>
+
+  <!-- Lớp 2: Quả cầu 3D CSS3D Three.js ở TASK 04 -->
+  <div id="sphere-layer" class="app-layer layer-sphere" aria-hidden="true">
+    <!-- Placeholder: Container CSS3DRenderer cho quả cầu ảnh & chữ xoay tròn -->
+    <!-- Nút chuyển sang thiệp thư giai đoạn cuối -->
+    <div id="sphere-action-bar" class="sphere-action-bar" aria-hidden="true">
+      <button id="open-letter-btn" class="sphere-to-letter-btn" type="button" aria-label="Mở bức thư chúc mừng 20/10">
+        <span>Mở bức thư chúc mừng 20/10 💌</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Lớp 3: Hoa hạt sáng neon 6 cánh trung tâm ở TASK 04A (Giai đoạn 1) -->
+  <div id="flower-canvas-layer" class="app-layer layer-flower-canvas">
+    <canvas id="flower-canvas" class="flower-canvas" aria-hidden="true"></canvas>
+  </div>
+
+  <!-- Lớp 4: Hoa ảnh phủ màn hình - Dành cho hiệu ứng bung nở 30-50 ảnh hoa ở TASK 04B / TASK 06 (Giai đoạn 2) -->
+  <div id="bloom-layer" class="app-layer layer-bloom" aria-hidden="true">
+    <!-- Placeholder: Các phần tử ảnh hoa bung nở sẽ được chèn động qua JS ở TASK 06 -->
+  </div>
+
+  <!-- Lớp 5: Nội dung kết thúc & Màn hình Lịch 20/10 với Mảnh ghép Puzzle -->
+  <div id="ending-layer" class="app-layer layer-ending" aria-hidden="true">
+    <!-- Màn hình Lịch Tháng 10 / 20/10 Fantasy & Tranh ghép Puzzle -->
+    <div id="calendar-screen" class="calendar-screen" aria-hidden="true">
+      <div class="calendar-main-container">
+
+        <!-- KHUNG TRANH FANTASY CHUNG BAO QUANH CẢ PUZZLE VÀ LỊCH -->
+        <div class="fantasy-artwork-frame">
+          <!-- Lớp nền tinh vân mờ huyền ảo bên trong khung tranh (xanh bạc, trắng ngọc trai, lavender, hồng phấn) -->
+          <div class="frame-nebula-glow" aria-hidden="true"></div>
+
+          <!-- Lớp kính mờ và phản chiếu ánh sáng nhẹ -->
+          <div class="frame-glass-sheen" aria-hidden="true"></div>
+
+          <!-- Đường viền mỏng thứ hai phía trong tạo chiều sâu -->
+          <div class="frame-inner-border" aria-hidden="true"></div>
+
+          <!-- Điểm sáng lung linh ở 4 góc khung tranh & đỉnh khung -->
+          <span class="frame-corner-sparkle sparkle-tl" aria-hidden="true">✦</span>
+          <span class="frame-corner-sparkle sparkle-tr" aria-hidden="true">✦</span>
+          <span class="frame-corner-sparkle sparkle-bl" aria-hidden="true">✦</span>
+          <span class="frame-corner-sparkle sparkle-br" aria-hidden="true">✦</span>
+          <span class="frame-corner-sparkle sparkle-tc" aria-hidden="true">✦</span>
+
+          <!-- KHỐI 2 BÊN CÂN ĐỐI: LỜI CHÚC HAPPY BÊN TRÁI + LỊCH FANTASY BÊN PHẢI -->
+          <div class="calendar-dual-stage">
+
+            <!-- BÊN TRÁI: KHỐI THIỆP CHỮ "HAPPY VIETNAMESE WOMEN'S DAY" -->
+            <div id="calendar-greeting-panel" class="calendar-greeting-container">
+              <!-- Điểm sáng lấp lánh xung quanh thiệp chữ -->
+              <div class="greeting-sparkles-field" aria-hidden="true">
+                <span class="greet-sparkle sp-top-right">✦</span>
+                <span class="greet-sparkle sp-mid-right">✦</span>
+                <span class="greet-sparkle sp-bot-right">✦</span>
+                <span class="greet-sparkle sp-top-center">✦</span>
+              </div>
+
+              <!-- Cánh hoa trang trí lơ lửng -->
+              <div class="greeting-petals-field" aria-hidden="true">
+                <span class="greet-petal gp-1"></span>
+                <span class="greet-petal gp-2"></span>
+                <span class="greet-petal gp-3"></span>
+                <span class="greet-petal gp-4"></span>
+              </div>
+
+              <!-- Nội dung chữ thiệp nghệ thuật -->
+              <div class="greeting-content-card">
+                <!-- Icon bông hoa 5 cánh nhỏ xinh phía trên chữ Happy -->
+                <div class="greeting-flower-badge" aria-hidden="true">
+                  <svg viewBox="0 0 32 32" class="greeting-flower-svg">
+                    <defs>
+                      <linearGradient id="flowerSvgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ffffff" />
+                        <stop offset="50%" stop-color="#ffb6d5" />
+                        <stop offset="100%" stop-color="#f472b6" />
+                      </linearGradient>
+                      <radialGradient id="flowerCenterGrad" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#ffffff" />
+                        <stop offset="60%" stop-color="#fbcfe8" />
+                        <stop offset="100%" stop-color="#f43f5e" />
+                      </radialGradient>
+                    </defs>
+                    <!-- 5 cánh hoa tròn thanh tú -->
+                    <circle cx="16" cy="8" r="4.2" fill="url(#flowerSvgGrad)" opacity="0.95" />
+                    <circle cx="23.6" cy="13.5" r="4.2" fill="url(#flowerSvgGrad)" opacity="0.95" />
+                    <circle cx="20.7" cy="22.5" r="4.2" fill="url(#flowerSvgGrad)" opacity="0.95" />
+                    <circle cx="11.3" cy="22.5" r="4.2" fill="url(#flowerSvgGrad)" opacity="0.95" />
+                    <circle cx="8.4" cy="13.5" r="4.2" fill="url(#flowerSvgGrad)" opacity="0.95" />
+                    <!-- Nhụy hoa phát sáng ở giữa -->
+                    <circle cx="16" cy="16" r="3.5" fill="url(#flowerCenterGrad)" />
+                    <circle cx="16" cy="16" r="1.5" fill="#ffffff" />
+                  </svg>
+                </div>
+
+                <!-- Dòng 1: "Happy" thư pháp lãng mạn -->
+                <h1 class="greeting-word-happy">Happy</h1>
+
+                <!-- Dòng 2: "VIETNAMESE" in hoa cách đều -->
+                <h2 class="greeting-word-vietnamese">VIETNAMESE</h2>
+
+                <!-- Dòng 3: "Women's Day" nghệ thuật -->
+                <h2 class="greeting-word-womensday">Women's Day</h2>
+
+                <!-- Đường nét cong phân cách tinh tế có điểm nhấn trung tâm -->
+                <div class="greeting-divider-line" aria-hidden="true">
+                  <svg viewBox="0 0 280 24" class="greeting-divider-svg">
+                    <defs>
+                      <linearGradient id="greetDividerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
+                        <stop offset="20%" stop-color="#ffffff" stop-opacity="0.8" />
+                        <stop offset="50%" stop-color="#ffd5e8" stop-opacity="1" />
+                        <stop offset="80%" stop-color="#ffffff" stop-opacity="0.8" />
+                        <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <!-- Nét cong lượn mềm mại uốn nhẹ ở giữa -->
+                    <path d="M 12,12 Q 105,12 126,17 Q 133,19 140,19 Q 147,19 154,17 Q 175,12 268,12" fill="none"
+                      stroke="url(#greetDividerGrad)" stroke-width="1.3" stroke-linecap="round" />
+                    <!-- Nút thắt hoa/nhụy nhỏ ở tâm đường cong -->
+                    <circle cx="140" cy="18" r="3.2" fill="#ffe4ee" />
+                    <circle cx="140" cy="18" r="1.6" fill="#e85d93" />
+                  </svg>
+                </div>
+
+                <!-- Khối đáy: Dòng chữ "A DAY TO CELEBRATE YOU" nằm ngang ở góc dưới bên phải -->
+                <div class="greeting-bottom-row">
+                  <div class="celebrate-badge">
+                    <span class="celebrate-text">A DAY TO CELEBRATE YOU</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- BÊN PHẢI: TỜ LỊCH FANTASY HỒNG TÍM CUỘN MA THUẬT (CHUẨN ẢNH THAM KHẢO 2) -->
+            <div class="calendar-paper-wrapper">
+
+              <!-- VÒNG QUỸ ĐẠO ÁNH SÁNG 3D PHÍA SAU (BACK ORBITS) -->
+              <svg class="calendar-orbit-svg orbit-back" viewBox="0 0 520 450" aria-hidden="true">
+                <defs>
+                  <linearGradient id="orbitGlowPink" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ff9ebb" stop-opacity="0.9" />
+                    <stop offset="50%" stop-color="#d07aff" stop-opacity="0.85" />
+                    <stop offset="100%" stop-color="#ff5599" stop-opacity="0.95" />
+                  </linearGradient>
+                  <linearGradient id="orbitGlowSoft" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+                    <stop offset="45%" stop-color="#ffb3d1" stop-opacity="0.8" />
+                    <stop offset="100%" stop-color="#b066fe" stop-opacity="0.65" />
+                  </linearGradient>
+                </defs>
+                <!-- Vòng elip quỹ đạo trên nghiêng ôm đầu cuộn giấy -->
+                <ellipse cx="260" cy="140" rx="215" ry="90" class="orbit-path-glow top-orbit"
+                  transform="rotate(-16 260 140)" />
+                <ellipse cx="260" cy="140" rx="205" ry="82" class="orbit-path-dashed" transform="rotate(-14 260 140)" />
+
+                <!-- Vòng elip quỹ đạo dưới nghiêng ôm chân cuộn giấy & cụm hoa -->
+                <ellipse cx="265" cy="335" rx="225" ry="96" class="orbit-path-glow bottom-orbit"
+                  transform="rotate(14 265 335)" />
+                <ellipse cx="265" cy="335" rx="210" ry="86" class="orbit-path-dashed" transform="rotate(12 265 335)" />
+
+                <!-- Các hạt sáng di chuyển chậm dọc theo quỹ đạo sau -->
+                <circle cx="85" cy="165" r="2.8" fill="#ffb8d4" class="orbit-particle p-back-1" />
+                <circle cx="435" cy="305" r="3.2" fill="#d994ff" class="orbit-particle p-back-2" />
+                <circle cx="160" cy="375" r="2.4" fill="#ffffff" class="orbit-particle p-back-3" />
+              </svg>
+
+              <!-- HỆ THỐNG CÁNH HOA BAY TRONG KHÔNG GIAN (16 CÁNH HOA ĐA DẠNG) -->
+              <div class="calendar-petals-field" aria-hidden="true">
+                <!-- Cánh hoa lớp sau (xa hơn, mờ nhẹ) -->
+                <span class="fantasy-petal petal-1 petal-back"></span>
+                <span class="fantasy-petal petal-2 petal-back"></span>
+                <span class="fantasy-petal petal-3 petal-back"></span>
+                <span class="fantasy-petal petal-4 petal-back"></span>
+                <span class="fantasy-petal petal-5 petal-back"></span>
+                <span class="fantasy-petal petal-6 petal-back"></span>
+
+                <!-- Cánh hoa lớp giữa & trước (rõ nét, trôi bồng bềnh dọc quỹ đạo) -->
+                <span class="fantasy-petal petal-7 petal-front"></span>
+                <span class="fantasy-petal petal-8 petal-front"></span>
+                <span class="fantasy-petal petal-9 petal-front"></span>
+                <span class="fantasy-petal petal-10 petal-front"></span>
+                <span class="fantasy-petal petal-11 petal-front"></span>
+                <span class="fantasy-petal petal-12 petal-front"></span>
+                <span class="fantasy-petal petal-13 petal-front"></span>
+                <span class="fantasy-petal petal-14 petal-front"></span>
+                <span class="fantasy-petal petal-15 petal-front"></span>
+                <span class="fantasy-petal petal-16 petal-front"></span>
+              </div>
+
+              <!-- BƯỚM PHÁT SÁNG DẠ QUANG (SVG CHI TIẾT ĐẬP CÁNH 3D) -->
+              <!-- Bướm 1: Góc trên bên trái tờ lịch -->
+              <div class="magic-butterfly butterfly-top-left" aria-hidden="true">
+                <div class="butterfly-wing wing-left">
+                  <svg viewBox="0 0 32 40">
+                    <path d="M 30,20 C 24,4 8,0 2,10 C -2,16 2,24 16,22 C 4,28 2,36 6,38 C 12,40 25,30 30,20 Z"
+                      fill="url(#bfGrad1)" stroke="#ffffff" stroke-width="0.8" />
+                    <path d="M 28,19 C 22,8 12,5 6,11" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="0.6" />
+                  </svg>
+                </div>
+                <div class="butterfly-wing wing-right">
+                  <svg viewBox="0 0 32 40">
+                    <path d="M 2,20 C 8,4 24,0 30,10 C 34,16 30,24 16,22 C 28,28 30,36 26,38 C 20,40 7,30 2,20 Z"
+                      fill="url(#bfGrad1)" stroke="#ffffff" stroke-width="0.8" />
+                    <path d="M 4,19 C 10,8 20,5 26,11" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="0.6" />
+                  </svg>
+                </div>
+                <div class="butterfly-body"></div>
+              </div>
+
+              <!-- Bướm 2: Cạnh dưới bên trái tờ lịch -->
+              <div class="magic-butterfly butterfly-bottom-left" aria-hidden="true">
+                <div class="butterfly-wing wing-left">
+                  <svg viewBox="0 0 32 40">
+                    <path d="M 30,20 C 24,4 8,0 2,10 C -2,16 2,24 16,22 C 4,28 2,36 6,38 C 12,40 25,30 30,20 Z"
+                      fill="url(#bfGrad2)" stroke="#ffffff" stroke-width="0.8" />
+                    <path d="M 28,19 C 22,8 12,5 6,11" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="0.6" />
+                  </svg>
+                </div>
+                <div class="butterfly-wing wing-right">
+                  <svg viewBox="0 0 32 40">
+                    <path d="M 2,20 C 8,4 24,0 30,10 C 34,16 30,24 16,22 C 28,28 30,36 26,38 C 20,40 7,30 2,20 Z"
+                      fill="url(#bfGrad2)" stroke="#ffffff" stroke-width="0.8" />
+                    <path d="M 4,19 C 10,8 20,5 26,11" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="0.6" />
+                  </svg>
+                </div>
+                <div class="butterfly-body"></div>
+              </div>
+
+              <!-- Bướm 3: Cạnh giữa bên trái bay lượn nhẹ -->
+              <div class="magic-butterfly butterfly-mid-left" aria-hidden="true">
+                <div class="butterfly-wing wing-left">
+                  <svg viewBox="0 0 32 40">
+                    <path d="M 30,20 C 24,4 8,0 2,10 C -2,16 2,24 16,22 C 4,28 2,36 6,38 C 12,40 25,30 30,20 Z"
+                      fill="url(#bfGrad3)" stroke="#ffffff" stroke-width="0.7" />
+                  </svg>
+                </div>
+                <div class="butterfly-wing wing-right">
+                  <svg viewBox="0 0 32 40">
+                    <path d="M 2,20 C 8,4 24,0 30,10 C 34,16 30,24 16,22 C 28,28 30,36 26,38 C 20,40 7,30 2,20 Z"
+                      fill="url(#bfGrad3)" stroke="#ffffff" stroke-width="0.7" />
+                  </svg>
+                </div>
+                <div class="butterfly-body"></div>
+              </div>
+
+              <!-- SVG DEFS DÙNG CHUNG CHO BƯỚM VÀ CÁNH HOA -->
+              <svg width="0" height="0" style="position:absolute;visibility:hidden;" aria-hidden="true">
+                <defs>
+                  <linearGradient id="bfGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+                    <stop offset="40%" stop-color="#ff9ec5" stop-opacity="0.9" />
+                    <stop offset="100%" stop-color="#b673f8" stop-opacity="0.85" />
+                  </linearGradient>
+                  <linearGradient id="bfGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+                    <stop offset="45%" stop-color="#ba75ff" stop-opacity="0.9" />
+                    <stop offset="100%" stop-color="#ff73ab" stop-opacity="0.85" />
+                  </linearGradient>
+                  <linearGradient id="bfGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+                    <stop offset="50%" stop-color="#ffb8db" stop-opacity="0.85" />
+                    <stop offset="100%" stop-color="#d49aff" stop-opacity="0.8" />
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              <!-- TỜ LỊCH FANTASY MA THUẬT: NGHIÊNG, UỐN CONG, TRONG SUỐT NHẸ (ẢNH MẪU 2) -->
+              <div class="calendar-paper magic-scroll">
+                <!-- Mép cuộn ống mở ở đỉnh cuộn giấy -->
+                <div class="scroll-roll-top" aria-hidden="true"></div>
+
+                <!-- Nếp uốn cong vểnh lên mềm mại ở góc dưới bên trái (như ảnh 2) -->
+                <div class="scroll-curl-corner" aria-hidden="true"></div>
+
+                <!-- Tiêu đề lịch: "Tháng 10" thư pháp lãng mạn bay bổng -->
+                <div class="calendar-header">
+                  <div class="calendar-title-wrapper">
+                    <span class="header-sparkle-heart" aria-hidden="true">💖</span>
+                    <h2 class="calendar-title">Tháng 10</h2>
+                    <span class="header-sparkle-heart" aria-hidden="true">✨</span>
+                  </div>
+                  <span class="calendar-year-label">2026</span>
+                </div>
+
+                <!-- Bảng các ngày trong tuần & các ngày trong tháng 10/2026 -->
+                <div class="calendar-grid">
+                  <div class="calendar-weekday">T2</div>
+                  <div class="calendar-weekday">T3</div>
+                  <div class="calendar-weekday">T4</div>
+                  <div class="calendar-weekday">T5</div>
+                  <div class="calendar-weekday">T6</div>
+                  <div class="calendar-weekday">T7</div>
+                  <div class="calendar-weekday weekend">CN</div>
+
+                  <!-- Tuần 1: Ngày 1/10/2026 bắt đầu vào Thứ Năm (T5) -->
+                  <div class="calendar-day empty"></div>
+                  <div class="calendar-day empty"></div>
+                  <div class="calendar-day empty"></div>
+                  <div class="calendar-day">1</div>
+                  <div class="calendar-day">2</div>
+                  <div class="calendar-day">3</div>
+                  <div class="calendar-day weekend">4</div>
+
+                  <!-- Tuần 2 -->
+                  <div class="calendar-day">5</div>
+                  <div class="calendar-day">6</div>
+                  <div class="calendar-day">7</div>
+                  <div class="calendar-day">8</div>
+                  <div class="calendar-day">9</div>
+                  <div class="calendar-day">10</div>
+                  <div class="calendar-day weekend">11</div>
+
+                  <!-- Tuần 3 -->
+                  <div class="calendar-day">12</div>
+                  <div class="calendar-day">13</div>
+                  <div class="calendar-day">14</div>
+                  <div class="calendar-day">15</div>
+                  <div class="calendar-day">16</div>
+                  <div class="calendar-day">17</div>
+                  <div class="calendar-day weekend">18</div>
+
+                  <!-- Tuần 4: Ngày 20/10 rơi vào Thứ Ba (T3), KHOANH TRÒN NÉT HỒNG PHÁT SÁNG TINH TẾ -->
+                  <div class="calendar-day">19</div>
+                  <div class="calendar-day day-special" id="calendar-day-20">
+                    <span class="day-num">20</span>
+                    <!-- Vòng khoanh nét hồng mềm mại ôm sát số 20, không che lấp các ngày xung quanh -->
+                    <svg class="day-circle-svg" viewBox="0 0 38 38" aria-hidden="true">
+                      <path class="day-circle-path"
+                        d="M 19,4 C 28,4 34,10 33,19 C 32,27 26,34 18,33 C 10,32 5,26 6,18 C 7,9 14,4 22,4 C 29,4 35,9 34,19" />
+                    </svg>
+                  </div>
+                  <div class="calendar-day">21</div>
+                  <div class="calendar-day">22</div>
+                  <div class="calendar-day">23</div>
+                  <div class="calendar-day">24</div>
+                  <div class="calendar-day weekend">25</div>
+
+                  <!-- Tuần 5: Ngày 31/10 rơi vào Thứ Bảy -->
+                  <div class="calendar-day">26</div>
+                  <div class="calendar-day">27</div>
+                  <div class="calendar-day">28</div>
+                  <div class="calendar-day">29</div>
+                  <div class="calendar-day">30</div>
+                  <div class="calendar-day">31</div>
+                  <div class="calendar-day empty"></div>
+                </div>
+
+                <!-- CỤM HOA HỒNG & HOA NHỎ GÓC DƯỚI BÊN PHẢI — TUYỆT ĐỐI KHÔNG CHE NGÀY 20–31 -->
+                <div class="calendar-decor-bouquet" aria-hidden="true">
+                  <!-- Đóa hồng chính màu hồng phấn -->
+                  <img src="images/flowers/flower-05.webp" alt="Hoa hồng trang trí" class="bouquet-flower-main">
+                  <!-- Đóa hoa nhỏ tím pastel nép bên dưới -->
+                  <img src="images/flowers/flower-04.webp" alt="Hoa nhỏ tím pastel" class="bouquet-flower-accent">
+                  <!-- Đóa hoa nhỏ phớt trắng kem điểm xuyết -->
+                  <img src="images/flowers/flower-02.webp" alt="Hoa nhỏ trắng kem" class="bouquet-flower-mini">
+                </div>
+              </div>
+
+              <!-- HOA NHỎ TRANG TRÍ DỌC THEO VÒNG QUỸ ĐẠO -->
+              <div class="orbit-decor-flower flower-orbit-bottom" aria-hidden="true">
+                <img src="images/flowers/flower-04.webp" alt="Hoa nhỏ trang trí quỹ đạo" class="orbit-mini-flower-img">
+              </div>
+
+              <!-- VÒNG QUỸ ĐẠO ÁNH SÁNG 3D PHÍA TRƯỚC (FRONT ORBITS) KÈM NGÔI SAO PHÁT SÁNG -->
+              <svg class="calendar-orbit-svg orbit-front" viewBox="0 0 520 450" aria-hidden="true">
+                <!-- Ngôi sao 4 cánh phát sáng rực rỡ ở đỉnh quỹ đạo trên (chuẩn theo ảnh mẫu 2) -->
+                <g transform="translate(260, 46)" class="orbit-star-sparkle">
+                  <path d="M 0,-15 Q 0,0 15,0 Q 0,0 0,15 Q 0,0 -15,0 Q 0,0 0,-15 Z" />
+                  <circle cx="0" cy="0" r="3.2" fill="#fff" />
+                </g>
+
+                <!-- Các hạt sáng li ti chạy dọc quỹ đạo phía trước -->
+                <circle cx="100" cy="185" r="3" fill="#ffccd9" class="orbit-particle p-front-1" />
+                <circle cx="425" cy="315" r="3.2" fill="#e8b0ff" class="orbit-particle p-front-2" />
+                <circle cx="280" cy="415" r="2.5" fill="#ffffff" class="orbit-particle p-front-3" />
+
+                <!-- Điểm sáng lóe nhẹ lấp lánh (sparkle flare) -->
+                <g transform="translate(450, 240)" class="orbit-sparkle-flare">
+                  <circle cx="0" cy="0" r="1.8" fill="#fff" />
+                  <line x1="-6" y1="0" x2="6" y2="0" stroke="#fff" stroke-width="0.8" />
+                  <line x1="0" y1="-6" x2="0" y2="6" stroke="#fff" stroke-width="0.8" />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHÍA DƯỚI: NÚT TIẾP TỤC CÂN ĐỐI (ĐÃ XÓA HOÀN TOÀN KHUNG LỜI CHÚC) -->
+        <div class="calendar-bottom-bar">
+          <button id="calendar-continue-btn" class="calendar-continue-btn" type="button"
+            aria-label="Tiếp tục sang quả cầu kỷ niệm">
+            <span>Tiếp tục &rarr;</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MÀN HÌNH PHONG THƯ & BỨC THƯ CHÚC MỪNG 20/10 (GIAI ĐOẠN CUỐI CÙNG) -->
+    <div id="letter-screen" class="letter-screen" aria-hidden="true">
+      <!-- 1. Hào quang không gian mộng mơ (Lavender & Soft Rose Ambient Glow) -->
+      <div class="letter-ambient-backdrop" aria-hidden="true"></div>
+
+      <!-- 2. Vòng hào quang quỹ đạo ánh sáng dưới sàn không gian (Cosmic Orbit Light Rings) -->
+      <div class="letter-cosmic-orbit" aria-hidden="true">
+        <div class="cosmic-ring-outer"></div>
+        <div class="cosmic-ring-inner"></div>
+        <div class="cosmic-ring-flare"></div>
+      </div>
+
+      <!-- 3. Các hạt sáng và cánh hoa bay bồng bềnh trong không gian vũ trụ -->
+      <div class="letter-particles-layer" aria-hidden="true" id="letter-particles"></div>
+
+      <!-- 4. Dòng chữ thơ mộng lơ lửng bên cạnh phong thư (Handwriting Quote) -->
+      <div class="letter-floating-quote" aria-hidden="true">
+        <p class="quote-line-top">Một bức thư nhỏ</p>
+        <p class="quote-line-bottom">Gửi trọn yêu thương... <span class="quote-heart">♡</span></p>
+      </div>
+
+      <!-- 5. Khung cảnh trung tâm chứa Phong bì & Bức thư -->
+      <div class="letter-scene-container">
+
+        <!-- PHONG THƯ MÀU ĐỎ RƯỢU VANG PHA TÍM HỒNG (THIẾT KẾ THUẦN HTML/CSS) -->
+        <div id="envelope-wrapper" class="envelope-wrapper" role="button" tabindex="0"
+          aria-label="Chạm vào con dấu sáp để mở thư">
+
+          <!-- Hào quang sáng dịu quanh phong thư -->
+          <div class="envelope-aura-glow" aria-hidden="true"></div>
+
+          <!-- Thân sau phong bì (Lớp lót bên trong màu đỏ mận sẫm sang trọng) -->
+          <div class="envelope-back">
+            <div class="envelope-back-sheen"></div>
+          </div>
+
+          <!-- NẮP PHONG BÌ PHÍA TRÊN (LẬT MỞ 180 ĐỘ BẰNG TRANSFORM VÀ TRANSFORM-ORIGIN) -->
+          <div id="envelope-flap" class="envelope-flap">
+            <!-- Mặt ngoài nắp phong bì (khi phong bì đang đóng) -->
+            <div class="flap-side flap-front">
+              <div class="flap-triangle-shape"></div>
+              <div class="flap-gold-edge"></div>
+            </div>
+            <!-- Mặt trong nắp phong bì (lộ ra khi nắp lật lên 180 độ) -->
+            <div class="flap-side flap-back">
+              <div class="flap-inner-lining"></div>
+              <div class="flap-inner-rim"></div>
+            </div>
+          </div>
+
+          <!-- HAI NẮP GẤP HAI BÊN TẠO BẰNG CSS CLIP-PATH HOẶC TAM GIÁC -->
+          <div class="envelope-fold fold-left"></div>
+          <div class="envelope-fold fold-right"></div>
+
+          <!-- NẮP GẤP PHÍA DƯỚI TẠO TÚI PHONG BÌ -->
+          <div class="envelope-fold fold-bottom">
+            <!-- Họa tiết viền vàng hồng ánh kim ở 2 góc dưới phong thư -->
+            <div class="envelope-corner-filigree filigree-bl" aria-hidden="true">
+              <svg viewBox="0 0 60 60">
+                <path d="M 4,56 L 56,56 Q 30,52 24,30 Q 18,12 4,4 L 4,56 Z" fill="none" stroke="url(#filigreeGoldGrad)"
+                  stroke-width="1.2" opacity="0.85" />
+                <path d="M 8,52 L 44,52 Q 26,48 20,32 Q 16,18 8,12 L 8,52 Z" fill="none" stroke="url(#filigreeGoldGrad)"
+                  stroke-width="0.8" opacity="0.65" />
+                <circle cx="20" cy="40" r="2.2" fill="#ffd185" />
+              </svg>
+            </div>
+            <div class="envelope-corner-filigree filigree-br" aria-hidden="true">
+              <svg viewBox="0 0 60 60">
+                <path d="M 56,56 L 4,56 Q 30,52 36,30 Q 42,12 56,4 L 56,56 Z" fill="none"
+                  stroke="url(#filigreeGoldGrad)" stroke-width="1.2" opacity="0.85" />
+                <path d="M 52,52 L 16,52 Q 34,48 40,32 Q 44,18 52,12 L 52,52 Z" fill="none"
+                  stroke="url(#filigreeGoldGrad)" stroke-width="0.8" opacity="0.65" />
+                <circle cx="40" cy="40" r="2.2" fill="#ffd185" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- CON DẤU SÁP HÌNH TRÒN 3D CÓ BIỂU TƯỢNG HOA HỒNG (TẠO HOÀN TOÀN BẰNG CSS) -->
+          <div id="wax-seal" class="envelope-wax-seal" title="Chạm vào con dấu để mở thư" role="button" tabindex="0">
+            <span class="wax-seal-pulse-glow" aria-hidden="true"></span>
+            <div class="wax-seal-body">
+              <div class="wax-seal-relief-ring"></div>
+              <!-- Biểu tượng hoa hồng dập nổi sắc nét ở trung tâm con dấu sáp -->
+              <svg class="wax-rose-svg" viewBox="0 0 36 36" aria-hidden="true">
+                <path d="M 18,7 C 14,7 11,10 11,13 C 11,17 14,19 18,22 C 22,19 25,17 25,13 C 25,10 22,7 18,7 Z"
+                  fill="#931739" />
+                <path d="M 18,10 C 16,10 14,12 14,14 C 14,16 16,18 18,19 C 20,18 22,16 22,14 C 22,12 20,10 18,10 Z"
+                  fill="#b9254d" />
+                <path d="M 18,12 C 17,12 16,13 16,14 C 16,15 17,16 18,16.5 C 19,16 20,15 20,14 C 20,13 19,12 18,12 Z"
+                  fill="#dc3965" />
+                <path d="M 13,15 C 9,16 8,20 11,23 C 13,24 16,23 17,21" fill="none" stroke="#e04672" stroke-width="1.2"
+                  stroke-linecap="round" />
+                <path d="M 23,15 C 27,16 28,20 25,23 C 23,24 20,23 19,21" fill="none" stroke="#e04672"
+                  stroke-width="1.2" stroke-linecap="round" />
+                <path d="M 14,23 C 16,27 20,27 22,23" fill="none" stroke="#ba2851" stroke-width="1.4"
+                  stroke-linecap="round" />
+                <path d="M 18,22 L 18,28" stroke="#7e132f" stroke-width="1.4" stroke-linecap="round" />
+              </svg>
+            </div>
+            <!-- Chữ gợi ý "Chạm mở" khi chưa mở -->
+            <span class="wax-seal-tag">Mở thư</span>
+          </div>
+
+        </div>
+
+        <!-- LÁ THƯ CHÚC MỪNG 20/10 (CHẾ ĐỘ ĐỌC NỔI BẬT CHÍNH GIỮA MÀN HÌNH, KHÔNG BỊ CHE KHUẤT) -->
+        <div id="letter-card" class="letter-card" aria-label="Bức thư chúc mừng ngày 20/10">
+          <!-- Viền kép vàng hồng & nền giấy ngọc trai/trắng kem -->
+          <div class="letter-paper-sheen" aria-hidden="true"></div>
+          <div class="letter-inner-border" aria-hidden="true"></div>
+
+          <!-- Nút thu nhỏ/đóng thư trở về phong bì -->
+          <button id="letter-close-btn" class="letter-close-btn" type="button" aria-label="Đóng lại phong thư"
+            title="Thu nhỏ về phong thư">
+            <span aria-hidden="true">&times;</span>
+          </button>
+
+          <!-- Họa tiết hoa trang trí góc lá thư -->
+          <div class="letter-corner-flower flower-top-left" aria-hidden="true">
+            <svg viewBox="0 0 100 100" class="corner-svg">
+              <path d="M 0,0 Q 40,15 65,55 Q 50,45 25,60" fill="none" stroke="rgba(215, 140, 160, 0.45)"
+                stroke-width="1.5" />
+              <circle cx="28" cy="22" r="9" fill="url(#sakuraGrad1)" opacity="0.9" />
+              <circle cx="28" cy="22" r="3.5" fill="#ffd1dc" />
+              <circle cx="55" cy="42" r="8" fill="url(#sakuraGrad1)" opacity="0.85" />
+              <circle cx="55" cy="42" r="3" fill="#ffe0e8" />
+              <circle cx="15" cy="38" r="6" fill="url(#sakuraGrad2)" opacity="0.8" />
+              <path d="M 68,26 C 72,20 78,24 75,30 C 70,33 66,30 68,26 Z" fill="#fca5a5" opacity="0.75" />
+            </svg>
+          </div>
+
+          <div class="letter-corner-flower flower-top-right" aria-hidden="true">
+            <svg viewBox="0 0 100 100" class="corner-svg">
+              <path d="M 100,0 Q 60,15 35,55 Q 50,45 75,60" fill="none" stroke="rgba(215, 140, 160, 0.45)"
+                stroke-width="1.5" />
+              <circle cx="72" cy="22" r="9" fill="url(#sakuraGrad1)" opacity="0.9" />
+              <circle cx="72" cy="22" r="3.5" fill="#ffd1dc" />
+              <circle cx="45" cy="42" r="8" fill="url(#sakuraGrad1)" opacity="0.85" />
+              <circle cx="45" cy="42" r="3" fill="#ffe0e8" />
+              <circle cx="85" cy="38" r="6" fill="url(#sakuraGrad2)" opacity="0.8" />
+            </svg>
+          </div>
+
+          <div class="letter-corner-flower flower-bottom-right" aria-hidden="true">
+            <svg viewBox="0 0 130 110" class="corner-svg">
+              <path d="M 130,110 Q 80,85 50,40" fill="none" stroke="rgba(215, 140, 160, 0.4)" stroke-width="1.4" />
+              <circle cx="85" cy="70" r="14" fill="url(#sakuraGrad1)" opacity="0.92" />
+              <circle cx="85" cy="70" r="5" fill="#ffccd5" />
+              <circle cx="108" cy="52" r="10" fill="url(#sakuraGrad1)" opacity="0.88" />
+              <circle cx="108" cy="52" r="4" fill="#ffe0e8" />
+              <circle cx="62" cy="55" r="9" fill="url(#sakuraGrad2)" opacity="0.85" />
+              <circle cx="62" cy="55" r="3.5" fill="#ffffff" />
+              <path d="M 40,78 C 45,72 52,76 48,83 C 42,86 37,83 40,78 Z" fill="#fca5a5" opacity="0.8" />
+              <path d="M 30,50 C 35,46 40,51 37,56 C 32,58 28,54 30,50 Z" fill="#fda4af" opacity="0.75" />
+            </svg>
+          </div>
+
+          <!-- SVG Gradient dùng cho hoa góc lá thư -->
+          <svg width="0" height="0" style="position:absolute;visibility:hidden;" aria-hidden="true">
+            <defs>
+              <linearGradient id="sakuraGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fff0f5" />
+                <stop offset="45%" stop-color="#fca5a5" />
+                <stop offset="100%" stop-color="#f43f5e" />
+              </linearGradient>
+              <linearGradient id="sakuraGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="60%" stop-color="#fbcfe8" />
+                <stop offset="100%" stop-color="#f472b6" />
+              </linearGradient>
+              <linearGradient id="filigreeGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fff2ce" />
+                <stop offset="45%" stop-color="#e8be78" />
+                <stop offset="100%" stop-color="#b6833b" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <!-- 1. Ảnh đại diện hình tròn ở phía trên -->
+          <div class="letter-avatar-container">
+            <div class="letter-avatar-ring">
+              <img src="images/memories/letter-photo.jpg" alt="Ảnh chân dung kỷ niệm" class="letter-avatar-image" />
+            </div>
+            <span class="letter-avatar-heart-badge" aria-hidden="true">♡</span>
+          </div>
+
+          <!-- 2. Tiêu đề "Chúc mừng ngày 20/10" viết tay thanh lịch -->
+          <div class="letter-header-group">
+            <h2 class="letter-cursive-title">Chúc mừng ngày 20/10</h2>
+            <div class="letter-title-heart-line" aria-hidden="true">
+              <span class="heart-line-bar bar-left"></span>
+              <span class="heart-line-icon">❤</span>
+              <span class="heart-line-bar bar-right"></span>
+            </div>
+          </div>
+
+          <!-- 3. Nội dung lời chúc 60 chữ trang trọng, ngọt ngào -->
+          <div class="letter-body-container">
+            <div class="letter-text-message" id="letter-body-text"></div>
+            <span class="typing-cursor" id="typing-cursor"></span>
+          </div>
+
+          <!-- 4. Chữ ký ở cuối thư kèm icon trái tim -->
+          <div class="letter-signature-container" id="letter-signature-area">
+            <span class="letter-signature-content" id="letter-signature-name">From: An</span>
+          </div>
+
+          <!-- 5. Nút đọc lại thư tinh tế -->
+          <div class="letter-footer-actions" id="letter-actions-footer">
+            <button id="letter-replay-btn" class="letter-replay-button" type="button" aria-label="Đọc lại bức thư">
+              <span class="replay-arrow" aria-hidden="true">↺</span>
+              <span>Đọc lại thư</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Nhạc nền chúc mừng 20/10 (tự động bật sau 3 giây) -->
+  <audio id="bg-music" src="music/background.mp3" preload="auto" loop></audio>
+
+  <!-- Lớp 6: Giao diện tương tác trên cùng (UI Overlay) -->
+  <div id="ui-layer" class="app-layer layer-ui">
+    <!-- Nút điều khiển bật / tắt nhạc nền -->
+    <button id="music-toggle-btn" class="music-toggle-btn paused" type="button" aria-label="Bật/Tắt nhạc nền"
+      title="Bật/Tắt nhạc nền">
+      <span class="music-icon" aria-hidden="true">🎵</span>
+    </button>
+
+    <!-- Nút gợi ý tương tác: Ẩn hoàn toàn trong 3s đầu và suốt thời gian hoa nở, chỉ hiện sau khi phủ kín màn hình -->
+    <div id="start-hint" class="start-hint" aria-hidden="true" role="button" tabindex="0">
+      <p class="hint-text">Tiếp tục &rarr;</p>
+    </div>
+  </div>
+
+  <!-- Thư viện đồ họa 3D Three.js và CSS3D Renderer từ CDN (TASK 04) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/renderers/CSS3DRenderer.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js" defer></script>
+
+  <!-- Các module nghiệp vụ -->
+  <script src="assets/bg-effects.js" defer></script>
+  <script src="assets/sphere.js" defer></script>
+  <script src="assets/flower-canvas.js" defer></script>
+  <script src="assets/bloom.js" defer></script>
+  <script src="assets/letter.js" defer></script>
+  <!-- Module Màn hình Lịch Fantasy 20/10 & Tranh ghép Puzzle -->
+  <script src="assets/calendar.js" defer></script>
+  <!-- File điều phối trung tâm và kết nối luồng trải nghiệm -->
+  <script src="assets/main.js" defer></script>
+</body>
+
+</html>
